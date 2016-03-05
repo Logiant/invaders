@@ -60,6 +60,13 @@ function player.move(dt)
   end
   --move the player
   player.x = player.x + horiz*player.speed*dt
+  --stay within screen bounds!
+  if player.x + player.sizex > screenWidth-5 then
+    player.x = screenWidth-5 - player.sizex
+  end
+  if player.x < 5 then
+    player.x = 5
+  end
   --fire the cannon!
   if love.keyboard.isDown("space") and player.lastFire > 0 then
     player.fire()

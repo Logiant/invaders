@@ -1,15 +1,31 @@
 enemy = {}
 enemy_controller = {enemies = {}, particles = {}}
+enemyTypes = {}
+images = {}
+str = ''
 
-function enemy_controller:load()
-  image = love.graphics.newImage('res/img/enemy_green.png');
+function enemy_controller:load(enemyList) --load each enemy.lua file
+  numTypes = 0
+  for _,t in pairs(enemyList) do
+    local path = 'enemies/'..t..'.lua'
+
+      local temp = love.filesystem.load(path)
+      e = temp()
+      e.image = love.graphics.newImage(e.imagePath);
+      table.insert(enemyTypes, e)
+      numTypes = numTypes + 1
+  end
 end
 
-function enemy_controller:spawn(x, y)
+function enemy_controller:spawn(x, y) --clone enemy information
+  local index = love.math.random(numTypes)
   enemy = {}
-  enemy.x = x; enemy.y = y; enemy.speed = 150; enemy.direction = 1;
+  enemy.update = enemyTypes[index].update
+  enemy.image = enemyTypes[index].image
+  enemy.x = x; enemy.y = y
+  enemy.speed = enemyTypes[index].speed; enemy.direction = 1;
   enemy.sizex = 40; enemy.sizey = 40;
-  enemy.cooldown = 0.75;
+  enemy.cooldown = enemyTypes[index].cooldown;
   enemy.lastFire = 0;
   enemy.bullets = {}
   table.insert(self.enemies, enemy);
@@ -25,14 +41,7 @@ function enemy_controller:update(dt)
   end
   --move enemies
   for i,e in ipairs(self.enemies) do
-    e.x = e.x + e.speed*dt*e.direction;
-    if e.x + e.sizex > 795 and e.direction > 0 then
-      e.direction = e.direction * -1
-      e.y = e.y + 60
-    elseif e.x < 5 and e.direction < 0 then
-      e.direction = e.direction * -1
-      e.y = e.y + 60
-    end
+    e:update(dt) --called from the enemy lua behavior script
     --lose the game if the get past y=400
     if e.y > 400 then
       game_over = true
@@ -58,7 +67,7 @@ end
 function enemy_controller:draw()
   love.graphics.setColor(255, 255, 255)
   for _,e in pairs(self.enemies) do
-    love.graphics.draw(image, e.x, e.y, 0, 4, 4)
+    love.graphics.draw(e.image, e.x, e.y, 0, 4, 4)
   end
   for _,p in pairs(self.particles) do
     love.graphics.draw(p.ps, p.x, p.y)

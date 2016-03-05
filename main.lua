@@ -1,9 +1,15 @@
 love.graphics.setDefaultFilter('nearest', 'nearest') --remove scaling interpolation
 require 'enemy' --enemy spawning script
 require 'player' --player script
+require 'config' --config script to load enemies
 
-game_over = false;
-win = false;
+--screen size
+screenWidth = love.graphics.getWidth()
+screenHeight = love.graphics.getHeight()
+
+--game states
+game_over = false
+win = false
 
 function love.load()
   --load game resources
@@ -11,6 +17,8 @@ function love.load()
   music:setLooping(true)
   pixel = love.graphics.newImage('res/img/pixel.png')
   background = love.graphics.newImage('res/img/background.png')
+  --get list of modded enemies
+  list = loadEnemies()
   --setup game window environment
   music:play()
   love.window.setTitle("SPAAAACE")
@@ -19,7 +27,7 @@ function love.load()
   bigText = love.graphics.newFont(64)
 
   --load different objects
-  enemy_controller:load()
+  enemy_controller:load(list)
   player.load()
 
   --spawn enemies
@@ -67,4 +75,5 @@ function love.draw()
       love.graphics.setFont(bigText);
       love.graphics.print("You Win!", love.graphics.getWidth()/2 -100, love.graphics.getHeight()/2)
     end
+
 end --love.draw()
