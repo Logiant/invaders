@@ -12,6 +12,7 @@ function love.load()
   --setup game window environment
   music:play()
   love.window.setTitle("SPAAAACE")
+  love.audio.setVolume(0.25) --quiet, you!
   background = love.graphics.newImage('res/img/background.png')
   bgScale = 2;
   bigText = love.graphics.newFont(64)
