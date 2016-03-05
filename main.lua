@@ -9,11 +9,12 @@ function love.load()
   --load game resources
   music = love.audio.newSource('res/audio/music.mp3')
   music:setLooping(true)
+  pixel = love.graphics.newImage('res/img/pixel.png')
+  background = love.graphics.newImage('res/img/background.png')
   --setup game window environment
   music:play()
   love.window.setTitle("SPAAAACE")
   love.audio.setVolume(0.25) --quiet, you!
-  background = love.graphics.newImage('res/img/background.png')
   bgScale = 2;
   bigText = love.graphics.newFont(64)
 
@@ -31,17 +32,18 @@ end --love.load()
 
 function love.update(dt)
   --if the game isn't lost then update everythings movement!
-  if game_over==false then
-    --update the player and all enemies
+  if game_over==false then --if the game isn't over
+    --update the player
     player.update(dt)
-    enemy_controller:update(dt);
-    checkCollision(enemy_controller.enemies, player.bullets);
+    enemy_controller:checkCollision(player.bullets);
 
     if next(enemy_controller.enemies) == nil then --if there are no emenies
       win = true
     end
-
   end
+
+  --update enemy movement
+  enemy_controller:update(dt);
 
 end --love.update(dt)
 
@@ -53,6 +55,7 @@ function love.draw()
   player.draw()
 
   enemy_controller:draw();
+  love.graphics.setColor(128, 255, 0)
 
   if game_over then --write game over text!
     love.graphics.setColor(255, 255, 255)
@@ -65,17 +68,3 @@ function love.draw()
       love.graphics.print("You Win!", love.graphics.getWidth()/2 -100, love.graphics.getHeight()/2)
     end
 end --love.draw()
-
-
-
-
-function checkCollision(enemies, bullets) -- do an O(nxm) search for collision
-  for i,e in ipairs(enemies) do
-    for j,b in ipairs(bullets) do
-        if b.y >= e.y and b.y <= e.y + e.sizey and b.x > e.x and b.x < e.x + e.sizex then
-          table.remove(enemies, i);
-          table.remove(bullets, j);
-        end
-    end
-  end
-end --checkCollision(enemies, bullets)
