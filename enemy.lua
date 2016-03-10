@@ -1,3 +1,5 @@
+local anim8 = require 'libs/anim8'
+enemySize = 64 --enemy size in pixles (collision and rendering)
 enemy = {}
 enemy_controller = {enemies = {}, particles = {}}
 enemyTypes = {}
@@ -12,6 +14,8 @@ function enemy_controller:load(enemyList) --load each enemy.lua file
       local temp = love.filesystem.load(path)
       e = temp()
       e.image = love.graphics.newImage(e.imagePath);
+      local g = anim8.newGrid(e.tileSize, e.tileSize, e.image:getWidth(), e.image:getHeight())
+      e.animation = anim8.newAnimation(g('1-'..tostring(e.numFrames),1), 0.33)
       table.insert(enemyTypes, e)
       numTypes = numTypes + 1
   end
@@ -22,11 +26,13 @@ function enemy_controller:spawn(x, y) --clone enemy information
   enemy = {}
   enemy.update = enemyTypes[index].update
   enemy.image = enemyTypes[index].image
+  enemy.animation = enemyTypes[index].animation:clone()
+  enemy.animation:update(love.math.random()*2) --give the anim a random offset
+  enemy.tileSize = enemyTypes[index].tileSize
   enemy.x = x; enemy.y = y
-  enemy.speed = enemyTypes[index].speed; enemy.direction = 1;
-  enemy.sizex = 40; enemy.sizey = 40;
-  enemy.cooldown = enemyTypes[index].cooldown;
-  enemy.lastFire = 0;
+  enemy.speed = enemyTypes[index].speed; enemy.direction = 1
+  enemy.cooldown = enemyTypes[index].cooldown
+  enemy.lastFire = 0
   enemy.bullets = {}
   table.insert(self.enemies, enemy);
 end
@@ -42,6 +48,8 @@ function enemy_controller:update(dt)
   --move enemies
   for i,e in ipairs(self.enemies) do
     e:update(dt) --called from the enemy lua behavior script
+    e.animation:update(dt)
+  --  e.animation:update(dt)
     --lose the game if the get past y=400
     if e.y > 400 then
       game_over = true
@@ -67,7 +75,7 @@ end
 function enemy_controller:draw()
   love.graphics.setColor(255, 255, 255)
   for _,e in pairs(self.enemies) do
-    love.graphics.draw(e.image, e.x, e.y, 0, 4, 4)
+    e.animation:draw(e.image, e.x, e.y, 0, enemySize/e.tileSize, enemySize/e.tileSize)
   end
   for _,p in pairs(self.particles) do
     love.graphics.draw(p.ps, p.x, p.y)
@@ -79,11 +87,11 @@ end
 function enemy_controller:checkCollision(bullets) -- do an O(nxm) search for collision
   for i,e in ipairs(self.enemies) do
     for j,b in ipairs(bullets) do
-        if b.y >= e.y and b.y <= e.y + e.sizey and b.x > e.x and b.x < e.x + e.sizex then
+        if b.y >= e.y and b.y <= e.y + enemySize and b.x > e.x and b.x < e.x + enemySize then
           particle = {}
           particle.ps = createParticleSystem()
-          particle.x = self.enemies[i].x + self.enemies[i].sizex/2
-          particle.y = self.enemies[i].y + self.enemies[i].sizey/2
+          particle.x = self.enemies[i].x + enemySize/2
+          particle.y = self.enemies[i].y + enemySize/2
           table.remove(self.enemies, i)
           table.insert(self.particles, particle)
           table.remove(bullets, j)

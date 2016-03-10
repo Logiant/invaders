@@ -31,7 +31,8 @@ function love.load()
   player.load()
 
   --spawn enemies
-  for x = 60, 720, 60 do
+  local dx = enemySize + 4
+  for x = 5, 720, dx do
     enemy_controller:spawn(x, 40);
   end
 

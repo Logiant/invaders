@@ -1,7 +1,7 @@
 
 function loadEnemies()
   load = {
-      "GreenEnemy", "BlueEnemy", "RedEnemy", "BlackEnemy",
+      "GreenEnemy", "BlackEnemy", "BlueEnemy", "RedEnemy",
   }
   return load
 end
