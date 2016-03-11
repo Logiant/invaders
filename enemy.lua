@@ -15,7 +15,7 @@ function enemy_controller:load(enemyList) --load each enemy.lua file
       e = temp()
       e.image = love.graphics.newImage(e.imagePath);
       local g = anim8.newGrid(e.tileSize, e.tileSize, e.image:getWidth(), e.image:getHeight())
-      e.animation = anim8.newAnimation(g('1-'..tostring(e.numFrames),1), 0.33)
+      e.animation = anim8.newAnimation(g('1-'..tostring(e.numFrames),1), 0.25)
       table.insert(enemyTypes, e)
       numTypes = numTypes + 1
   end

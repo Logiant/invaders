@@ -5,9 +5,9 @@ enemy.x = x
 enemy.y = y
 enemy.speed = 150
 enemy.cooldown = 0.75
-enemy.imagePath = 'res/img/enemy_red.png'
-enemy.numFrames = 1
-enemy.tileSize = 10
+enemy.imagePath = 'res/img/RedEnemy.png'
+enemy.numFrames = 4
+enemy.tileSize = 16
 
 
 enemy.update = function(self, dt)
