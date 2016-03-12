@@ -5,7 +5,7 @@ function player.load()
   player.image = love.graphics.newImage('res/img/player.png')
   player.shootSfx = love.audio.newSource('res/audio/laserfx.mp3', 'static')
   player.x = 40; player.y = 525
-  player.sizex = 40; player.sizey = 40 --ingame player size
+  player.sizex = 50; player.sizey = 50 --ingame player size
   player.imgSclX = player.sizex/player.image:getWidth()  --player img scale
   player.imgSclY = player.sizey/player.image:getHeight() --player img scale
   player.speed = 300 --speed in pixels per second

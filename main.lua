@@ -23,7 +23,7 @@ function love.load()
   music:play()
   love.window.setTitle("SPAAAACE")
   love.audio.setVolume(0.25) --quiet, you!
-  bgScale = 2;
+  bgScale = math.max(screenWidth, screenHeight) / math.min(background:getWidth(), background:getHeight());
   bigText = love.graphics.newFont(64)
 
   --load different objects
