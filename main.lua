@@ -13,7 +13,7 @@ win = false
 
 function love.load()
   --load game resources
-  music = love.audio.newSource('res/audio/music.mp3')
+  music = love.audio.newSource('res/audio/song.wav')
   music:setLooping(true)
   pixel = love.graphics.newImage('res/img/pixel.png')
   background = love.graphics.newImage('res/img/background.png')
@@ -22,7 +22,6 @@ function love.load()
   --setup game window environment
   music:play()
   love.window.setTitle("SPAAAACE")
-  love.audio.setVolume(0.25) --quiet, you!
   bgScale = math.max(screenWidth, screenHeight) / math.min(background:getWidth(), background:getHeight());
   bigText = love.graphics.newFont(64)
 

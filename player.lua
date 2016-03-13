@@ -4,6 +4,7 @@ player = {} --player forward declaration
 function player.load()
   player.image = love.graphics.newImage('res/img/player.png')
   player.shootSfx = love.audio.newSource('res/audio/laserfx.mp3', 'static')
+  player.shootSfx:setVolume(0.2);
   player.x = 40; player.y = 525
   player.sizex = 50; player.sizey = 50 --ingame player size
   player.imgSclX = player.sizex/player.image:getWidth()  --player img scale
